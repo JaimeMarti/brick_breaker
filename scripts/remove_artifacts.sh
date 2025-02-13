@@ -9,4 +9,5 @@ rm -rf linux/flutter/ephemeral
 rm -rf /tmp/flutter/ephemeral
 rm -rf .dart_tool/flutter_build
 rm -rf /tmp/flutter/flutter_build
+rm -rf android/app/.cxx
 rm -f pubspec.lock
