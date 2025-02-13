@@ -46,4 +46,8 @@ class Bat extends PositionComponent
       EffectController(duration: 0.1),
     ));
   }
+
+  void moveBy2(double dx) {
+    position = Vector2((position.x + dx).clamp(0, game.width), position.y);
+  }
 }

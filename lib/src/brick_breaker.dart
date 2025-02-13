@@ -22,7 +22,10 @@ class BrickBreaker extends FlameGame
           ),
         );
 
+  final ValueNotifier<int> score = ValueNotifier(0);
   final rand = math.Random();
+  bool pressingLeft = false;
+  bool pressingRight = false;
   double get width => size.x;
   double get height => size.y;
 
@@ -56,6 +59,7 @@ class BrickBreaker extends FlameGame
     world.removeAll(world.children.query<Bat>());
     world.removeAll(world.children.query<Brick>());
     playState = PlayState.playing;
+    score.value = 0;
     world.add(Ball(
         difficultyModifier: difficultyModifier,
         radius: ballRadius,
@@ -81,6 +85,20 @@ class BrickBreaker extends FlameGame
   }
 
   @override
+  void update(double dt) {
+    super.update(dt);
+    if (playState != PlayState.playing) return;
+    double dx = 0;
+    if(pressingLeft) {
+      dx = -batStep;
+    }
+    else if(pressingRight) {
+      dx = batStep;
+    }
+    world.children.query<Bat>().first.moveBy2(dx * 0.3);
+  }
+
+  @override
   void onTap() {
     super.onTap();
     startGame();
@@ -92,9 +110,19 @@ class BrickBreaker extends FlameGame
     super.onKeyEvent(event, keysPressed);
     switch (event.logicalKey) {
       case LogicalKeyboardKey.arrowLeft:
-        world.children.query<Bat>().first.moveBy(-batStep);
+        if(event is KeyDownEvent) {
+          pressingLeft = true;
+        }
+        else if(event is KeyUpEvent) {
+          pressingLeft = false;
+        }
       case LogicalKeyboardKey.arrowRight:
-        world.children.query<Bat>().first.moveBy(batStep);
+        if(event is KeyDownEvent) {
+          pressingRight = true;
+        }
+        else if(event is KeyUpEvent) {
+          pressingRight = false;
+        }
       case LogicalKeyboardKey.space:
       case LogicalKeyboardKey.enter:
         startGame();
